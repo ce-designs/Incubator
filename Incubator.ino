@@ -1,19 +1,21 @@
+
+#include <Pushbutton.h>
 #include <TimeLib.h>
 #include <EEPROM.h>
-#include <Button.h>
 #include <LiquidCrystal_I2C.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
 // PINS
-#define ONE_WIRE_BUS 2
+#define ONE_WIRE_BUS 10
 #define HEATER_RELAY_PIN 8
-#define BTN_LEFT_PIN 3
-#define BTN_RIGHT_PIN 4
+#define BTN_LEFT_PIN 2
+#define BTN_RIGHT_PIN 3
 
 // Buttons
-Button btnLeft(BTN_LEFT_PIN);
-Button btnRight(BTN_RIGHT_PIN);
+ 
+Pushbutton btnLeft(BTN_LEFT_PIN);
+Pushbutton btnRight(BTN_RIGHT_PIN);
 
 // DS18B20 Temperature probe
 OneWire oneWire(ONE_WIRE_BUS);
@@ -30,7 +32,7 @@ const byte eepromInitialized = 101;	// constant for determining if the the EEPRO
 // settings
 const unsigned long readInterval = 5000;
 const unsigned long OnOffInterval = 30000;
-const unsigned long saveSettingsInterval = 5000;
+const unsigned long saveSettingsDelay = 2000;
 const float tempDifference = 2;
 const float tempThreshold = 0.3;
 
@@ -45,11 +47,12 @@ bool overShootControlActive;
 unsigned long readTempMillis;
 unsigned long heaterOnMillis;
 unsigned long heaterOffMillis;
-unsigned long lastSaveSettingsMillis;
 unsigned long printTimeMillis;
 
 void setup()
 {
+	Serial.begin(9600);
+
 	// Initialize the EEPROM if not initialized
 	if (EEPROM.read(addrInitialized) != eepromInitialized)
 	{
@@ -57,17 +60,14 @@ void setup()
 		SaveSettings();
 	}
 	// Read from the EEPROM
-	setTemp = EEPROM.read(addrSetTemp);
+	setTemp = EEPROM.read(addrSetTemp);	
 
 	pinMode(HEATER_RELAY_PIN, OUTPUT);
 	
 	// Start up the DallasTemperature library 
 	sensors.begin();
 
-	lcd.begin(20, 4);
-
-	btnLeft.begin();
-	btnRight.begin();
+	lcd.begin(20, 4);	
 
 	sensors.requestTemperatures();
 	currentTemp = sensors.getTempCByIndex(0);
@@ -76,23 +76,33 @@ void setup()
 }
 
 void loop()
-{
-
-	if (btnLeft.pressed() && btnRight.pressed() && millis() - lastSaveSettingsMillis > saveSettingsInterval)
+{	
+	if (btnLeft.getSingleDebouncedRelease())
 	{
-		SaveSettings();	
-		PrintSavedSettings();
-		delay(2000);
-	}
-	else if (btnLeft.pressed())
-	{		
 		setTemp--;
 		UpdateMainMenuSetTemp();
+		delay(200);
 	}
-	else if (btnRight.pressed())
-	{		
+	else if (btnRight.getSingleDebouncedRelease())
+	{
 		setTemp++;
 		UpdateMainMenuSetTemp();
+		delay(200);
+	}
+	else if (btnLeft.isPressed() && btnRight.isPressed())
+	{
+		long t = millis();
+		while (btnLeft.isPressed() && btnRight.isPressed())
+		{
+			if (millis() - t > saveSettingsDelay)
+			{
+				SaveSettings();
+				PrintSavedSettings();
+				delay(2500);
+				PrintMainMenu();
+				break;
+			}
+		}
 	}
 
 	if (readTemperatureWithInterval() && prevTemp != currentTemp)
@@ -105,7 +115,6 @@ void loop()
 
 	if (overShootControlActive)
 	{
-
 		if (currentTemp + tempThreshold < setTemp && !heaterIsOn && (millis() - heaterOffMillis > OnOffInterval))
 		{
 			turnHeaterOn();
@@ -132,7 +141,6 @@ void loop()
 void SaveSettings()
 {
 	EEPROM.update(addrSetTemp, setTemp);
-	lastSaveSettingsMillis = millis();
 }
 
 void PrintTimeWithInterval()
@@ -166,8 +174,10 @@ void printDigits(byte digits)
 void PrintSavedSettings()
 {
 	lcd.clear();
-	lcd.setCursor(8, 1);
-	lcd.print("SAVED");	
+	lcd.setCursor(5, 1);
+	lcd.print("SETTINGS");	
+	lcd.setCursor(7, 2);
+	lcd.print("SAVED");
 }
 
 void PrintMainMenu()

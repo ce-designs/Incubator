@@ -5,13 +5,22 @@ VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Incubator", "Incubator.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Button-master-0.0.0", "..\libraries\Button-master\Button-master-0.0.0.vcxitems", "{6ED6862C-71B2-411F-990A-0360A704FE73}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ezButton-1.0.3", "..\libraries\ezButton\ezButton-1.0.3.vcxitems", "{33AA9629-5D39-4238-8F32-02560D50E024}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pushbutton-arduino-master-2.0.0", "..\libraries\pushbutton-arduino-master\pushbutton-arduino-master-2.0.0.vcxitems", "{EAF28960-6CAD-4189-A17C-B48439CCDAAD}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\libraries\Button-master\Button-master-1.0.0.vcxitems*{c5f80730-f44f-4478-bdae-6634efc2ca88}*SharedItemsImports = 4
+		..\libraries\ezButton\ezButton-1.0.3.vcxitems*{33aa9629-5d39-4238-8f32-02560d50e024}*SharedItemsImports = 9
+		..\libraries\Button-master\Button-master-0.0.0.vcxitems*{6ed6862c-71b2-411f-990a-0360a704fe73}*SharedItemsImports = 9
 		..\libraries\DallasTemperature\DallasTemperature-3.9.0.vcxitems*{c5f80730-f44f-4478-bdae-6634efc2ca88}*SharedItemsImports = 4
 		..\libraries\New-LiquidCrystal-master\New-LiquidCrystal-master-0.0.0.vcxitems*{c5f80730-f44f-4478-bdae-6634efc2ca88}*SharedItemsImports = 4
 		..\libraries\OneWire\OneWire-2.3.4.vcxitems*{c5f80730-f44f-4478-bdae-6634efc2ca88}*SharedItemsImports = 4
+		..\libraries\pushbutton-arduino-master\pushbutton-arduino-master-2.0.0.vcxitems*{c5f80730-f44f-4478-bdae-6634efc2ca88}*SharedItemsImports = 4
 		..\libraries\Time-master\Time-master-1.6.vcxitems*{c5f80730-f44f-4478-bdae-6634efc2ca88}*SharedItemsImports = 4
+		..\libraries\pushbutton-arduino-master\pushbutton-arduino-master-2.0.0.vcxitems*{eaf28960-6cad-4189-a17c-b48439ccdaad}*SharedItemsImports = 9
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
