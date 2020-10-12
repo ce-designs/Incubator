@@ -1,4 +1,3 @@
-
 #include <Pushbutton.h>
 #include <TimeLib.h>
 #include <EEPROM.h>
@@ -12,8 +11,7 @@
 #define BTN_LEFT_PIN 2
 #define BTN_RIGHT_PIN 3
 
-// Buttons
- 
+// Buttons 
 Pushbutton btnLeft(BTN_LEFT_PIN);
 Pushbutton btnRight(BTN_RIGHT_PIN);
 
@@ -99,6 +97,7 @@ void loop()
 				SaveSettings();
 				PrintSavedSettings();
 				delay(2500);
+				setTime(0);
 				PrintMainMenu();
 				break;
 			}
@@ -145,7 +144,7 @@ void SaveSettings()
 
 void PrintTimeWithInterval()
 {
-	long currentTime = now();
+	unsigned long currentTime = now();
 	if (currentTime - printTimeMillis < 1)
 		return;	
 	int days = elapsedDays(currentTime);
@@ -162,9 +161,12 @@ void PrintTimeWithInterval()
 	printTimeMillis = currentTime;
 }
 
+/// <summary>
+/// utility function for digital clock display: prints colon and leading 0
+/// </summary>
+/// <param name="digits"></param>
 void printDigits(byte digits)
-{
-	// utility function for digital clock display: prints colon and leading 0
+{	
 	lcd.print(":");
 	if (digits < 10)
 		lcd.print('0');
